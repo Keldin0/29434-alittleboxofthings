@@ -63,7 +63,7 @@ const GIFT_CONFIG = {
     {
       id: "item3",
       type: "note",
-      label: "placeholder",
+      label: "another little note",
       image: "assets/images/cat-sprite.gif",
       imageBelow: true,
       plainBackground: true,
