@@ -158,8 +158,8 @@ const GIFT_CONFIG = {
 
   // ---- EmailJS credentials (see README.md, Step 2) ----
   emailjs: {
-    publicKey: "YOUR_PUBLIC_KEY",
-    serviceId: "YOUR_SERVICE_ID",
-    templateId: "YOUR_TEMPLATE_ID"
+    publicKey: "dMIe2rM0mmU535Qcs",
+    serviceId: "service_6d58jlr",
+    templateId: "template_29mt6yu"
   }
 };
