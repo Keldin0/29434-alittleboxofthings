@@ -1,0 +1,616 @@
+@font-face {
+  font-family: 'YouveGotMail';
+  src: url('assets/fonts/youvegotmail.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  src: url('assets/fonts/quicksand-latin-500-normal.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --paper: #EEE4D1;
+  --kraft: #D9BE8C;
+  --kraft-dark: #C9A768;
+  --ink: #262220;
+  --ink-soft: #514A42;
+  --stamp: #B23A2E;
+  --stamp-dark: #8E2C22;
+  --line: rgba(38, 34, 32, 0.18);
+  --radius: 10px;
+  --shadow: 0 6px 18px rgba(38, 34, 32, 0.15);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--paper);
+  background-image:
+    radial-gradient(circle at 20% 10%, rgba(201,167,104,0.25), transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(201,167,104,0.2), transparent 45%);
+  color: var(--ink);
+  font-family: 'Fraunces', Georgia, serif;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+:focus-visible {
+  outline: 2px solid var(--stamp);
+  outline-offset: 3px;
+}
+
+.hidden { display: none !important; }
+
+.screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+/* ---------- Cover ---------- */
+
+.cover-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.cover-heading {
+  font-family: 'YouveGotMail', 'Fraunces', cursive;
+  font-weight: 600;
+  color: var(--stamp);
+  font-size: clamp(22px, 6vw, 32px);
+  line-height: 1.35;
+  white-space: pre-line;
+  margin: 0 0 36px;
+  max-width: 380px;
+}
+
+/* The box graphic acts as the open button. container-type is kept
+   available in case you want to add more overlay elements later. */
+.box-button {
+  position: relative;
+  width: min(320px, 82vw);
+  background: none;
+  border: none;
+  padding: 0;
+  display: block;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.box-img {
+  width: 100%;
+  display: block;
+}
+
+/* Faint "hovering" shadow beneath the box — only visible on hover/focus,
+   so it reads as an affordance rather than decoration. */
+.box-button::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2%;
+  width: 62%;
+  height: 10%;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(38, 34, 32, 0.28), transparent 72%);
+  filter: blur(6px);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.box-button:hover::after,
+.box-button:focus-visible::after {
+  opacity: 1;
+}
+
+/* Idle float: a slow, slight up/down + side-to-side arc, like a
+   character-select idle animation. Runs continuously until the box
+   is clicked. */
+.box-img.idle {
+  animation: boxIdleFloat 4.2s ease-in-out infinite;
+}
+
+@keyframes boxIdleFloat {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  25%  { transform: translate(2px, -5px) rotate(0.5deg); }
+  50%  { transform: translate(0, -7px) rotate(0deg); }
+  75%  { transform: translate(-2px, -5px) rotate(-0.5deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Shake: plays once on click/tap, like giving the box a shake to
+   guess what's inside, before the page moves on. */
+.box-img.is-shaking {
+  animation: boxShake 0.7s ease-in-out;
+}
+
+@keyframes boxShake {
+  0%   { transform: translate(0, 0) rotate(0deg); }
+  10%  { transform: translate(-5px, 0) rotate(-3.5deg); }
+  20%  { transform: translate(5px, -2px) rotate(3.5deg); }
+  30%  { transform: translate(-5px, 0) rotate(-3deg); }
+  40%  { transform: translate(5px, -2px) rotate(3deg); }
+  50%  { transform: translate(-4px, 0) rotate(-2deg); }
+  60%  { transform: translate(4px, 0) rotate(2deg); }
+  70%  { transform: translate(-3px, 0) rotate(-1.2deg); }
+  80%  { transform: translate(3px, 0) rotate(1.2deg); }
+  90%  { transform: translate(-1px, 0) rotate(0deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+.tap-text {
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  margin: 26px 0 0;
+}
+
+/* Box-opening transition, after the shake finishes */
+#cover.opening .box-button,
+#cover.opening .tap-text {
+  animation: lidOpen 0.6s ease forwards;
+}
+
+/* ---------- Shipping-label card (used on the confirmation screen) ---------- */
+
+.label-card {
+  background: var(--kraft);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 40px 32px;
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+  position: relative;
+}
+
+.label-card::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  border: 1px dashed rgba(38,34,32,0.35);
+  border-radius: 6px;
+  pointer-events: none;
+}
+
+.btn {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 28px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: transform 0.15s ease;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: var(--stamp);
+  color: var(--paper);
+}
+
+.btn-primary:hover { background: var(--stamp-dark); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1.5px solid var(--ink);
+  margin-top: 28px;
+}
+
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:focus-visible {
+  background: var(--stamp);
+  color: var(--paper);
+  border-color: var(--stamp);
+}
+
+@keyframes lidOpen {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-40px) rotate(-3deg); opacity: 0; }
+}
+
+/* ---------- Box interior ---------- */
+
+.box-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.box-header h2 {
+  font-weight: 600;
+  font-size: 26px;
+  margin: 0 0 6px;
+}
+
+.progress-text {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-soft);
+  letter-spacing: 0.04em;
+}
+
+.items-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 36px 28px;
+  max-width: 640px;
+  width: 100%;
+}
+
+/* Each item (image/icon + its label) floats as one unit, just like
+   the care package box on the cover — but never shakes. Clicking
+   it only opens the modal underneath. */
+.item-float {
+  animation-name: boxIdleFloat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  width: 110px;
+}
+
+.item-tag-btn {
+  background: none;
+  border: none;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.item-icon {
+  font-size: 40px;
+  line-height: 1;
+}
+
+.item-thumb {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+  box-shadow: var(--shadow);
+}
+
+.item-pill {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--stamp);
+  background: var(--paper);
+  border: 1.5px solid var(--stamp);
+  border-radius: 999px;
+  padding: 6px 16px;
+  white-space: nowrap;
+}
+
+.item-float.opened {
+  opacity: 0.55;
+}
+
+.item-float.opened .item-pill::after {
+  content: " ✓";
+}
+
+/* ---------- Modal ---------- */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(38, 34, 32, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 10;
+}
+
+.modal-card {
+  background: var(--paper) url('assets/images/paper-grain.jpg') repeat;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-width: 480px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 32px 26px;
+  position: relative;
+  animation: modalIn 0.25s ease;
+}
+
+/* Opt-out of the grain texture for specific items (set via
+   `plainBackground: true` in content.js) — flat color to match
+   things like the cat sprite GIF's own background. */
+.modal-card--plain {
+  background: var(--paper);
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.94) translateY(6px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: var(--ink-soft);
+}
+
+.modal-photo {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.modal-caption {
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 15px;
+}
+
+.modal-note-image {
+  width: 100%;
+  border-radius: 14px;
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.modal-note-text {
+  font-family: 'Caveat', cursive;
+  font-size: 28px;
+  line-height: 1.4;
+  color: var(--ink);
+  margin: 0 0 18px;
+}
+
+.modal-note-text:last-child {
+  margin-bottom: 0;
+}
+
+.modal-map-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.modal-map-wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.modal-link-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 14px;
+}
+
+/* ---------- Form ---------- */
+
+.form-card {
+  background: var(--kraft);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 36px 30px;
+  max-width: 440px;
+  width: 100%;
+}
+
+.back-link {
+  background: none;
+  border: none;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-soft);
+  padding: 0;
+  margin-bottom: 18px;
+}
+
+.form-card h2 {
+  font-weight: 600;
+  font-size: 24px;
+  margin: 0 0 8px;
+}
+
+.form-subheading {
+  color: var(--ink-soft);
+  font-size: 14px;
+  margin: 0 0 22px;
+}
+
+.field {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-family: 'Space Mono', monospace;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.field input,
+.field textarea {
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1.5px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  resize: vertical;
+}
+
+.field textarea { min-height: 90px; }
+
+/* ---- info (i) tooltip, used on text questions with `info` set ---- */
+
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  border-radius: 50%;
+  border: 1.5px solid var(--ink-soft);
+  color: var(--ink-soft);
+  font-family: 'Fraunces', serif;
+  font-style: italic;
+  font-size: 11px;
+  line-height: 1;
+  position: relative;
+  cursor: help;
+  vertical-align: middle;
+}
+
+.info-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'Fraunces', serif;
+  font-style: normal;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  border-radius: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 5;
+}
+
+.info-icon:hover .info-tooltip,
+.info-icon:focus .info-tooltip,
+.info-icon.tapped .info-tooltip {
+  opacity: 1;
+}
+
+/* ---- radio-based questions (radio, spice-radio, yesno-fire) ---- */
+
+.radio-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.radio-options-inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 14px 20px;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Fraunces', serif;
+  font-size: 14px;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform 0.18s ease-out;
+  width: fit-content;
+}
+
+.radio-option input[type="radio"] {
+  accent-color: var(--stamp);
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.radio-option input[type="radio"]:disabled {
+  cursor: pointer; /* the wrapping label still handles the click */
+}
+
+.radio-reaction,
+.fire-emojis {
+  font-size: 13px;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.fire-emojis {
+  font-style: normal;
+  letter-spacing: 1px;
+}
+
+.radio-option.unavailable {
+  opacity: 0.55;
+}
+
+.radio-option.unavailable .radio-option-text {
+  text-decoration: line-through;
+}
+
+.form-error {
+  color: var(--stamp-dark);
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+/* ---------- Confirmation ---------- */
+
+#sent-heading {
+  font-weight: 600;
+  font-size: 26px;
+  margin: 0 0 10px;
+}
+
+#sent-body {
+  color: var(--ink-soft);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 420px) {
+  .item-float { width: 92px; }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>a little box of goodies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,500&family=Space+Mono:wght@400;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- COVER: heading, box (as button), tap text -->
+  <section id="cover" class="screen">
+    <div class="cover-inner">
+      <h1 id="cover-heading" class="cover-heading"></h1>
+
+      <button id="open-btn" class="box-button" aria-label="Open your digital care package">
+        <img id="box-img" class="box-img idle" src="assets/images/CarePackage.webp" alt="A digital care package box">
+      </button>
+
+      <p id="tap-text" class="tap-text"></p>
+    </div>
+  </section>
+
+  <!-- BOX: item grid -->
+  <section id="box" class="screen hidden">
+    <header class="box-header">
+      <h2 id="box-heading"></h2>
+      <p id="progress-text" class="progress-text"></p>
+    </header>
+    <div id="items-grid" class="items-grid"></div>
+
+    <button id="go-to-form-btn" class="btn btn-secondary"></button>
+  </section>
+
+  <!-- MODAL: reveal a single item -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal-card">
+      <button id="modal-close" class="modal-close" aria-label="close">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- FORM: leave something in return -->
+  <section id="form-section" class="screen hidden">
+    <div class="form-card">
+      <button id="back-to-box-btn" class="back-link">← back to the box</button>
+      <h2 id="form-heading"></h2>
+      <p id="form-subheading" class="form-subheading"></p>
+      <form id="reply-form"></form>
+      <p id="form-error" class="form-error hidden"></p>
+    </div>
+  </section>
+
+  <!-- CONFIRMATION -->
+  <section id="confirmation" class="screen hidden">
+    <div class="label-card">
+      <h2 id="sent-heading"></h2>
+      <p id="sent-body"></p>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="content.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
