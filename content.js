@@ -152,8 +152,8 @@ const GIFT_CONFIG = {
       }
     ],
     submitLabel: "submit preferences",
-    sentHeading: "sent, with love",
-    sentBody: "your note is on its way. thank you for opening this."
+    sentHeading: "sent successfully",
+    sentBody: "Your prefernces have been noted. Thank you for opening this."
   },
 
   // ---- EmailJS credentials (see README.md, Step 2) ----
